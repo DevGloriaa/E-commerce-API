@@ -14,11 +14,13 @@ public class Order {
     @Id
 
     private String id;
+    private String userId;
     @DBRef
     private User user;
 
     @DBRef
     private List<OrderItem> items;
     private Double totalAmount;
+
 
 }
