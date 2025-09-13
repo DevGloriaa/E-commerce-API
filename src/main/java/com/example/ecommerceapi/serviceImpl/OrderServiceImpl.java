@@ -1,52 +1,52 @@
 package com.example.ecommerceapi.serviceImpl;
 
+import com.example.ecommerceapi.enums.OrderStatus;
 import com.example.ecommerceapi.model.Order;
+import com.example.ecommerceapi.model.OrderItem;
 import com.example.ecommerceapi.repository.OrderRepository;
 import com.example.ecommerceapi.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
-
     @Override
-    public Order placeOrder(Order order) {
-        order.setStatus("PENDING");
-        order.setOrderDate(LocalDateTime.now());
+    public Order createOrder(String userId, List<OrderItem> items) {
+        double total = items.stream()
+                .mapToDouble(i -> i.getPrice() * i.getQuantity())
+                .sum();
+
+        Order order = new Order();
+        order.setUserId(userId);
+        order.setItems(items);
+        order.setTotalAmount(total);
+        order.setStatus(OrderStatus.PENDING);
+        order.setCreatedAt(LocalDateTime.now());
+        order.setUpdatedAt(LocalDateTime.now());
+
         return orderRepository.save(order);
     }
 
     @Override
-    public Optional<Order> getOrderById(String id) {
-        return orderRepository.findById(id);
-    }
-
-    @Override
-    public Optional<Order> getOrderByUserId(String userId) {
+    public List<Order> getOrdersByUser(String userId) {
         return orderRepository.findByUserId(userId);
     }
 
     @Override
-    public Optional<Order> updateOrderStatus(String orderId, String status) {
-        return orderRepository.findById(orderId).map(order -> {
-            order.setStatus(status);
-            return orderRepository.save(order);
-        });
-    }
-
-    @Override
-    public void deleteOrder(String orderId) {
-        if (!orderRepository.existsById(orderId)) {
-            throw new RuntimeException("Order not found with id: " + orderId);
-        }
-        orderRepository.deleteById(orderId);
+    public Order updateOrderStatus(String orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(status);
+        order.setUpdatedAt(LocalDateTime.now());
+        return orderRepository.save(order);
     }
 }
