@@ -28,7 +28,7 @@ A RESTful API for powering an e-commerce platform. It provides endpoints for man
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/ecommerce-api.git
+git clone https://github.com/DevGloriaa/E-commerce-API.git
 
 # Navigate into project
 cd ecommerce-api
