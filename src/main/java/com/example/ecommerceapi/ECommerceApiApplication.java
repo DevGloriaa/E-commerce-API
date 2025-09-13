@@ -10,7 +10,7 @@ ECommerceApiApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(ECommerceApiApplication.class, args);
-        System.out.println("E-commerce application started");
+        System.out.println("E-commerce application started✅");
     }
 
 }
