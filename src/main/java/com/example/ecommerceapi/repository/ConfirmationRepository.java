@@ -6,6 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
 public interface ConfirmationRepository extends MongoRepository<Confirmation, String> {
-    @Override
     Optional<Confirmation> findById(String confirmation);
 }
